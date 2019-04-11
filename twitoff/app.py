@@ -2,7 +2,7 @@
 from decouple import config
 from flask import Flask, render_template, request
 from .models import DB, User
-from .twitter import add_or_update_user
+from .twitter import add_or_update_user, update_all_users
 from os import getenv
 from dotenv import load_dotenv
 from .predict import predict_user
@@ -29,6 +29,10 @@ def create_app():
         DB.create_all()
         return render_template('base.html', title='DB Reset!')
 
+    @app.route('/update')
+    def update():
+        update_all_users()
+        return render_template('base.html', title='Update all users!', users=User.query.all())
 
     @app.route('/user', methods=['POST'])
     @app.route('/user/<name>', methods=['GET'])
